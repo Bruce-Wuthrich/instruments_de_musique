@@ -3,15 +3,33 @@ services:
 ###> doctrine/doctrine-bundle ###
   database:
     ports:
-      - "5432"
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    environment:
+      PMA_HOST: database
+      PMA_USER: ${MARIADB_USER:-app}
+      PMA_PASSWORD: ${MARIADB_PASSWORD:-!ChangeMe!}
+    ports:
+      - "8080:80"
+    depends_on:
+      database:
+        condition: service_healthy
 ###< doctrine/doctrine-bundle ###
+
+  php:
+    ports:
+      - "8000:80"
+    environment:
+      MAILER_DSN: "smtp://mailer:1025"
 
 ###> symfony/mailer ###
   mailer:
     image: axllent/mailpit
     ports:
       - "1025"
-      - "8025"
+      - "8025:8025"
     environment:
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
