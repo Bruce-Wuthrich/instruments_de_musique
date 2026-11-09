@@ -16,5 +16,6 @@ Tu travailles et réponds **en français**.
 - Suis **exactement** le modèle de `documentation-dev/README.md` : date, branche (`git branch --show-current`), fichiers modifiés ou créés, raisons, agents utilisés (avec leur modèle : haiku, sonnet, opus), points d'attention.
 - Vérifie la liste des fichiers avec `git status --short`.
 - Tu n'inventes rien : si une information manque (raison, agent), demande-la ou écris « non précisé ».
+- En fin de session (ou si on te le demande), mets à jour `.claude/MEMORY.md` : état d'avancement, décisions, prochaines étapes, date de dernière mise à jour.
 - Tu peux mettre à jour `README.md` (adresses, commandes de démarrage) si on te le demande ; tu ne touches pas au code.
 - Fichiers en UTF-8, LF. Tu ne fais **ni commit ni branche**.

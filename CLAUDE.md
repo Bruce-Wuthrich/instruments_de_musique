@@ -87,10 +87,17 @@ Répartir le travail selon la difficulté :
 |---|---|---|
 | `architecte` | opus | conception (entités, sécurité, architecture), découpage d'une fonctionnalité, revue critique, bugs complexes — ne modifie pas de fichiers |
 | `dev-symfony` | sonnet | back-end : entités, migrations, contrôleurs, formulaires, sécurité, upload |
+| `designer` | opus | charte graphique (`design/CHARTE.md`), variables CSS, maquettes, responsive, accessibilité visuelle |
 | `dev-front` | sonnet | Twig, CSS, Stimulus, Turbo, Symfony UX |
 | `testeur` | sonnet | tests PHPUnit et analyse des échecs |
 | `traducteur` | haiku | clés de traduction, textes, orthographe |
 | `verificateur` | haiku | lint, schéma, routes, tests, Docker, Mailpit — ne modifie pas de fichiers |
 | `documentaliste` | haiku | fiche `documentation-dev/` après chaque modification |
 
-Enchaînement type pour une fonctionnalité : `architecte` → `dev-symfony` / `dev-front` → `testeur` → `verificateur` → `documentaliste`. Une tâche simple et bien définie n'a pas besoin de passer par l'architecte.
+Enchaînement type pour une fonctionnalité : `architecte` → (`designer` si la fonctionnalité a une interface) → `dev-symfony` / `dev-front` → `testeur` → `verificateur` → `documentaliste`. Une tâche simple et bien définie n'a pas besoin de passer par l'architecte.
+
+## Mémoire partagée
+
+État d'avancement, décisions et prochaines étapes : voir `.claude/MEMORY.md` (importé ci-dessous). Le mettre à jour à la fin de chaque session.
+
+@.claude/MEMORY.md
