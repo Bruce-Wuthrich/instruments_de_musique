@@ -12,6 +12,6 @@
 
     alias gs='git status'
     alias ga='git add .'
-    alias gcm='git commit -m'
+    alias gcm='git commit -m '
     alias gps='git push'
 
