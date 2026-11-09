@@ -26,3 +26,10 @@ Ce sera un site de présentation des instruments de musique de type bois (Clarin
 - **Database**: Doctrine ORM 3 avec mapping d'attributs; `DATABASE_URL` dans `.env` en MariaDB.
 - **Services**: autowired/autoconfigured de `src/` (`config/services.yaml`); routes sont chargées par les attributs de contrôlleurs.
 - Langue par défaut du projet `en`; mais nous utiliserons en premier le `fr` via `translations/`.
+
+## Commits et documentation
+
+Claude ne peut pas créer de branches ni faire de commit lui-même.
+Il doit par contre documenter chaque modification dans le dossier `documentation-dev`
+- format : YYYY-MM-DD-HH-MM_description-courte.md
+- contenu minimal : date, fichiers modifiés ou créés, raisons, liste des agents utilisés
