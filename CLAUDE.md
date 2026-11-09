@@ -38,7 +38,8 @@ ce sera un site de presentation des instruments de musique de type cordes frott�
 
 ```bash
 docker compose up -d --build                     # lance tout l'environnement (voir ci-dessous)
-docker compose exec php bash                     # shell dans le conteneur PHP : toutes les commandes suivantes s'y lancent
+docker compose exec -u www-data php bash         # shell dans le conteneur PHP : toutes les commandes suivantes s'y lancent
+                                                 # (toujours -u www-data, sinon les fichiers créés appartiennent à root)
 composer install                                 # dépendances + cache:clear, assets:install, importmap:install
 
 php bin/console make:entity                      # génération (make:controller, make:crud, make:user, make:form…)
@@ -56,6 +57,8 @@ Services Docker (`compose.yaml` + `compose.override.yaml` en dev) :
 - `php` : image `docker/php/Dockerfile` (PHP 8.4 + Apache, Composer, extensions intl/pdo_mysql/zip/opcache) → site sur http://localhost:8000. Le projet est monté dans `/var/www/html` ; `www-data` a l'UID 1000 de l'utilisateur WSL.
 - `database` : MariaDB 11.4, port 3306 (hôte `database` depuis les conteneurs, `127.0.0.1` depuis WSL — `DATABASE_URL` est surchargée dans le service `php`).
 - `phpmyadmin` : http://localhost:8080 — `mailer` (Mailpit) : http://localhost:8025, utilisé par le conteneur `php` via `MAILER_DSN`.
+
+Pour Claude Code (Git Bash sous Windows) : préfixer les commandes Docker par `export MSYS_NO_PATHCONV=1;`, sinon les chemins comme `/var/www/html` sont convertis en chemins Windows. Exemple : `docker compose exec -T -u www-data php php bin/console …`.
 
 Depuis WSL (PHP 8.4 installé), les commandes `php bin/console …` fonctionnent aussi directement, en se connectant à MariaDB via `127.0.0.1:3306`.
 
@@ -75,3 +78,19 @@ Il doit par contre documenter chaque modification dans le dossier `documentation
 - contenu minimal : date, fichiers modifiés ou créés, raisons, liste des agents utilisés
 - modèle à suivre : `documentation-dev/README.md`
 
+
+## Agents (`.claude/agents/`)
+
+Répartir le travail selon la difficulté :
+
+| Agent | Modèle | Pour quoi |
+|---|---|---|
+| `architecte` | opus | conception (entités, sécurité, architecture), découpage d'une fonctionnalité, revue critique, bugs complexes — ne modifie pas de fichiers |
+| `dev-symfony` | sonnet | back-end : entités, migrations, contrôleurs, formulaires, sécurité, upload |
+| `dev-front` | sonnet | Twig, CSS, Stimulus, Turbo, Symfony UX |
+| `testeur` | sonnet | tests PHPUnit et analyse des échecs |
+| `traducteur` | haiku | clés de traduction, textes, orthographe |
+| `verificateur` | haiku | lint, schéma, routes, tests, Docker, Mailpit — ne modifie pas de fichiers |
+| `documentaliste` | haiku | fiche `documentation-dev/` après chaque modification |
+
+Enchaînement type pour une fonctionnalité : `architecte` → `dev-symfony` / `dev-front` → `testeur` → `verificateur` → `documentaliste`. Une tâche simple et bien définie n'a pas besoin de passer par l'architecte.

@@ -16,6 +16,7 @@ COPY docker/php/php.ini /usr/local/etc/php/conf.d/zz-app.ini
 # www-data reprend l'UID/GID de l'utilisateur WSL : pas de problème de droits sur var/ et vendor/
 ARG UID=1000
 ARG GID=1000
-RUN groupmod -o -g ${GID} www-data && usermod -o -u ${UID} -g ${GID} www-data
+RUN groupmod -o -g ${GID} www-data && usermod -o -u ${UID} -g ${GID} www-data \
+    && mkdir -p /var/www/.composer && chown -R www-data:www-data /var/www/.composer
 
 WORKDIR /var/www/html
