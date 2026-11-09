@@ -1,41 +1,43 @@
-# CLAUDE.md
+# Instrument de musique : Cordes frottées
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+ce sera un site de presentation des instruments de musique de type cordes frottés (Violon, alto, violoncelle, contrebasse, viole de gambe, etc), on devra pouvoir y poster différents modèles d instruments d un meme type.
+
+**cible** : les passionnés de musiques , et particulierement des instruments de types bois .
+
+**Langue** : tout en francais pour le moment (meme notre conversation et les commandes), d autres (anglais espagnol , etc) suivront sur le site , mais dans un second temps.
+
+**architecture**: La page d accueil sera un historique de la famille des cordes frottées .Les sections seront `Violon`, `alto`,`violoncelle`,`contrebasse`, `viole de gambe`et `Monocorde à clavier`. on pourra y inserer des instruments avec des photos et un extrait sonore( si disponible ) . un Admin pourra ajouter et ou modifier des instruments et des sections. les autres utilisateurs pourront poster  des commentaires à valider.
+
+**stack** :
+- on travaille en wsl2 unbuntu sous windows 11 
+- symfony 7.4 LTS avec webapp
+- PHP 8.5
+- frontend avec  Importmap et ux.symfony (https://ux.symfony.com/), les templates sont en twig
+- base de donnée : Mariadb avec PHPMyAdmin
+- Mailpit pour les mails en dev
+- Docker pour travailler localement
+
+**github** : git@github.com:Bruce-Wuthrich/instruments_de_musique.git
+
 
 ## Project
 
-"Instruments de musique" — a Symfony 7.4 web application (PHP >= 8.2) at the skeleton stage: `src/Controller`, `src/Entity` and `src/Repository` are still empty, so most features will be built with MakerBundle. The repo lives in WSL (Ubuntu 22.04); run PHP/Composer/Docker commands inside WSL, not from Windows.
+"Instruments de musique : Cordes frottées" — a Symfony 7.4 web application (PHP >= 8.2) at the skeleton stage: `src/Controller`, `src/Entity` and `src/Repository` are still empty, so most features will be built with MakerBundle. The repo lives in WSL (Ubuntu 22.04); run PHP/Composer/Docker commands inside WSL, not from Windows.
 
-## Commands
 
-```bash
-composer install                     # also runs cache:clear, assets:install, importmap:install
-docker compose up -d                 # PostgreSQL 16 (+ Mailpit in dev via compose.override.yaml)
-symfony serve -d                     # or: php -S localhost:8000 -t public
+## Architecture notes
 
-php bin/console make:entity          # scaffolding (also make:controller, make:form, make:crud, make:user…)
-php bin/console make:migration
-php bin/console doctrine:migrations:migrate
-php bin/console debug:router
+- **Frontend**: AssetMapper + importmap (`importmap.php`), node.js non nécessaire. point d'entrée `assets/app.js`; Stimulus controllers dans `assets/controllers/` (auto-registered via `assets/stimulus_bootstrap.js`), Turbo enabled. Templates dans `templates/` (Twig, étendu d'un `template.html.twwig` enfant de  `base.html.twig`).
+- **Database**: Doctrine ORM 3 avec mapping d'attributs; `DATABASE_URL` dans `.env` en MariaDB.
+- **Services**: autowired/autoconfigured de `src/` (`config/services.yaml`); routes sont chargées par les attributs de contrôlleurs.
+- Langue par défaut du projet `en`; mais nous utiliserons en premier le `fr` via `translations/`.
 
-php bin/phpunit                                  # full test suite
-php bin/phpunit tests/Path/To/SomeTest.php       # single file
-php bin/phpunit --filter testMethodName          # single test
-```
 
-There is no linter or static-analysis tool installed. PHPUnit (v13) is configured to **fail on deprecations, notices and warnings** (`phpunit.dist.xml`), so deprecated Symfony/Doctrine APIs break the build.
 
-## Architecture
+## Commits et documentation
 
-- **Services**: everything under `src/` is autowired/autoconfigured (`config/services.yaml`); namespace `App\` → `src/`, `App\Tests\` → `tests/`.
-- **Routing**: attribute-based (`#[Route]` on controllers), loaded via `config/routes.yaml`.
-- **Persistence**: Doctrine ORM 3 with attribute mapping in `src/Entity`, underscore naming strategy, PostgreSQL identity columns. Schema changes go through migrations in `migrations/`. The test env uses a separate database suffixed `_test` (create it with `php bin/console --env=test doctrine:database:create`).
-- **Frontend**: no Node/Webpack — AssetMapper + importmap (`importmap.php`), Stimulus controllers in `assets/controllers/` (auto-registered), Turbo enabled. Add JS packages with `php bin/console importmap:require <pkg>`. Templates in `templates/`, base layout `templates/base.html.twig`.
-- **Async**: Messenger uses the Doctrine transport (`MESSENGER_TRANSPORT_DSN=doctrine://default`); emails and notifier chat/SMS messages are routed `async`, so they are only sent when a worker runs: `php bin/console messenger:consume async`. Failures go to the `failed` transport.
-- **Security**: `security.yaml` still uses an in-memory placeholder provider with no authenticator and no access_control rules — replace it once a `User` entity exists (`make:user`, `make:security:form-login`).
-- **Environment**: defaults in `.env`, per-env in `.env.dev` / `.env.test`; put machine-specific overrides (e.g. a different `DATABASE_URL`) in the uncommitted `.env.local`.
+Claude ne peut pas créer de branches ni faire de commit lui-même.
+Il doit par contre documenter chaque modification dans le dossier `documentation-dev`
+- format : YYYY-MM-DD-HH-MM_description-courte.md
+- contenu minimal : date, fichiers modifiés ou créés, raisons, liste des agents utilisés
 
-## Conventions
-
-- `.editorconfig`: UTF-8, **LF line endings**, 4-space indent (2 for `compose*.yaml`). Editing from Windows must keep LF.
-- Work on feature branches (e.g. `feature/01-...`); `main` is the main branch.

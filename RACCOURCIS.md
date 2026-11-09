@@ -9,7 +9,7 @@
         nano ~/.bashrc
 
 
-## Commandes
+## Commandes git
 
    alias gs='git status'
    alias ga='git add .'
