@@ -2,7 +2,9 @@
 
 Lien vers github du projet : https://github.com/WebDevCF2m/instruments_de_musique
 
-## Etape 1
+## Raccourcis
+
+[Raccourcis](RACCOURCIS.md)
 
 #### Installation sous WSL2 de Windows 11 du projet instruments de musique:
 
